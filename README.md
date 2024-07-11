@@ -1,40 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# nextjs-file-validator
 
-## Getting Started
+`nextjs-file-validator` is a React hook for validating files. It supports validation for images and PDFs, including custom validation functions.
 
-First, run the development server:
+## API
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### `useFileValidation`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Parameters**
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- `userOptions` (optional): An object containing the validation options.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+**Options**
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- `showAlert` (boolean): Show alert messages. Default is `false`.
+- `sizeInKbAllowed` (number): Maximum allowed file size in KB. Default is `10240` (10 MB).
+- `allowedTypes` (string[]): Array of allowed MIME types. Default is `['image/jpeg', 'image/png', 'application/pdf']`.
+- `heightOfImage` (number): Maximum allowed height of an image. Default is `2000`.
+- `widthOfImage` (number): Maximum allowed width of an image.
+- `pdfPageMinCount` (number): Minimum number of pages allowed in a PDF file. Default is `1`.
+- `pdfPageMaxCount` (number): Maximum number of pages allowed in a PDF file. Default is `10`.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+**Features**
 
-## Learn More
+- Validate file size, type, and dimensions.
+- Custom validation functions for images and PDFs.
+- Configurable alert messages.
+- Supports TypeScript.
 
-To learn more about Next.js, take a look at the following resources:
+**Usage**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```tsx
+import useFileValidation from 'nextjs-file-validator';
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+function MyComponent() {
+    const { validateFile, error } = useFileValidation();
 
-## Deploy on Vercel
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        try {
+            await validateFile(file);
+            console.log('File is valid');
+            // Proceed with your logic after file validation
+        } catch (error) {
+            console.error('File validation failed:', error);
+            // Handle error or display error message
+        }
+    };
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    return (
+        <div>
+            <input type="file" onChange={handleFileChange} />
+            {error && <div style={{ color: 'red' }}>{error}</div>}
+        </div>
+    );
+}

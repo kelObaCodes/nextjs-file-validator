@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = require("react");
 const defaultOptions = {
     showAlert: false,
-    sizeInKbAllowed: 10240, // Default to 10 MB
+    sizeInKbAllowed: 10240,
     allowedTypes: ["image/jpeg", "image/png", "application/pdf"],
-    heightOfImage: 2000, // Default maximum height for images
-    widthOfImage: 2000, // Default maximum width for images
-    pdfPageMinCount: 1, // Minimum PDF page count
-    pdfPageMaxCount: 10, // Maximum PDF page count
+    heightOfImage: 2000,
+    widthOfImage: 2000,
+    pdfPageMinCount: 1,
+    pdfPageMaxCount: 10,
     messages: {
         noFile: "No file selected.",
         fileSize: "File size exceeds the allowed limit.",
@@ -75,7 +75,11 @@ const useFileValidation = (userOptions = {}) => {
                         return;
                     }
                     // Extract the page count
-                    const pageCount = (pdfText.match(/\/Count\s+(\d+)/g) || []).reduce((count, match) => Math.max(count, parseInt(match, 10)), 0);
+                    const pageCountMatches = pdfText.match(/\/Count\s+(\d+)/g) || [];
+                    const pageCount = pageCountMatches.reduce((count, match) => {
+                        const matchCount = parseInt(match.split(' ')[1], 10);
+                        return Math.max(count, matchCount);
+                    }, 0);
                     if (pageCount < options.pdfPageMinCount ||
                         pageCount > options.pdfPageMaxCount) {
                         const message = (_b = options.messages.pdfPageCount) !== null && _b !== void 0 ? _b : 'PDF does not meet the required page count';

@@ -101,7 +101,12 @@ const useFileValidation = (userOptions: ValidationOptions = {}) => {
                     }
 
                     // Extract the page count
-                    const pageCount = (pdfText.match(/\/Count\s+(\d+)/g) || []).reduce((count, match) => Math.max(count, parseInt(match, 10)), 0);
+                    const pageCountMatches = pdfText.match(/\/Count\s+(\d+)/g) as string[] || [];
+                    const pageCount = pageCountMatches.reduce((count: number, match: string) => {
+                        const matchCount = parseInt(match.split(' ')[1], 10);
+                        return Math.max(count, matchCount);
+                    }, 0);
+
                     if (
                         pageCount < options.pdfPageMinCount ||
                         pageCount > options.pdfPageMaxCount

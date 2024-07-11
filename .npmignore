@@ -1,5 +1,8 @@
-src/
-.git
-node_modules/
-*.log
-tsconfig.tsbuildinfo
+.next/
+dist/
+public
+src
+next-env.d.ts
+next.config.mjs
+README.md
+tsconfig.json
