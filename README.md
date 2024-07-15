@@ -33,7 +33,37 @@
 import useFileValidation from 'nextjs-file-validator';
 
 function MyComponent() {
-    const { validateFile, error } = useFileValidation();
+    const { validateFile, error } = useFileValidation({
+        sizeInKbAllowed: 5120, // 5 MB
+        allowedTypes: ["image/jpeg", "image/png"],
+        showAlert: true,
+        pdfPageMinCount: 1,
+        pdfPageMaxCount: 5,
+        messages: {
+            noFile: "Please select a file.",
+            fileSize: "The file is too large!",
+            fileType: "This file type is not supported!",
+            dimensions: "The image dimensions are too large!",
+        },
+        customValidations: {
+            image: [
+                (file, image) => {
+                    // Example custom validation: image must be a square
+                    return image.width === image.height ? true : 'Image must be a square.';
+                }
+            ],
+            pdf: [
+                (file, pdfData, pdfText) => {
+                    // Custom PDF validation
+                    if (!pdfText.includes('Example Keyword')) {
+                        return 'PDF does not contain the required keyword';
+                    }
+                    return true;
+                }
+            ]
+        }
+    });
+
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];

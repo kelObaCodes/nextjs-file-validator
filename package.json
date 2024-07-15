@@ -1,6 +1,6 @@
 {
   "name": "nextjs-file-validator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A React hook for file validation",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
